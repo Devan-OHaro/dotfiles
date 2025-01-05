@@ -1,0 +1,39 @@
+{
+  "packages": {
+    "vim": {
+      "install": true,
+      "dotfiles": [
+        { "source": "vimrc", "target": ".vimrc" }
+      ]
+    },
+    "git": {
+      "install": true,
+      "dotfiles": [
+        { "source": "gitconfig", "target": ".gitconfig" }
+      ]
+    },
+    "tmux": {
+      "install": true,
+      "dotfiles": [
+        { "source": "tmux.conf", "target": ".tmux.conf" }
+      ]
+    },
+    "zsh": {
+      "install": true,
+      "dotfiles": [
+        { "source": "zshrc", "target": ".zshrc" }
+      ]
+    },
+    "neovim": {
+      "install": true,
+      "dotfiles": [
+        { "source": "nvim/init.vim", "target": ".config/nvim/init.vim" }
+      ]
+    }
+  },
+  "platforms": {
+    "linux": ["sudo apt install -y"],
+    "macos": ["brew install"]
+  }
+}
+
