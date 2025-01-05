@@ -1,0 +1,1 @@
+* [ ] Change script to not display all of install script in "$package_install"
