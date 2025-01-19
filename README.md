@@ -15,7 +15,7 @@ This repository contains my personal dotfiles for configuring development enviro
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/<your-username>/dotfiles.git ~/.dotfiles
+   git clone https://github.com/Devan-OHaro/dotfiles.git ~/.dotfiles
    ```
 
 2. **Install Dependencies:**
