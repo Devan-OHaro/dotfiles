@@ -40,7 +40,7 @@ for entry in $(jq -c '.packages | to_entries[]' "$MAPPING_FILE"); do
 
   if [[ "$install" == "true" ]]; then
     echo "Installing $package..."
-    eval "$package_manager $package"
+    eval "$package_manager $package" &> /dev/null
   fi
 
   echo "$dotfiles" | while read -r dotfile; do
