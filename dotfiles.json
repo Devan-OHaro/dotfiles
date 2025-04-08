@@ -1,11 +1,15 @@
 {
   "packages": {
-    "vim": {
-      "install": true,
-      "dotfiles": [
-        { "source": "vimrc", "target": ".vimrc" }
-      ]
-    },
+	"vim": {
+		"install": true,
+		"dotfiles": [
+			{ "source": "vimrc", "target": ".vimrc" }
+		],
+		"commands": [
+			"curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim",
+			"script -q -c 'vim +PlugInstall +qa' /dev/null"
+		]
+	},
     "git": {
       "install": true,
       "dotfiles": [
