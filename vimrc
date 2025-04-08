@@ -9,4 +9,3 @@ syntax on
    \ 'syntax': 'default',
    \ 'ext': '.wiki'
    \ }]
-

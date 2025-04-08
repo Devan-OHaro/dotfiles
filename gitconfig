@@ -1,0 +1,16 @@
+[user]
+	name = Devan-OHaro
+	email = Devan-OHaro@users.noreply.github.com
+
+[push]
+    default = current
+
+[pull]
+    rebase = true
+
+[color]
+    ui = auto
+
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+
