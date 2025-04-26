@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# === Bootstrap Setup Script ===
-# For Devan-OHaro's full environment setup
+# === Bootstrap Script ===
+# Sets up basic applications, dotfiles, optional and system-specific installs
 
-# Colors for clean output
+# Colors for terminal output
 GREEN="\033[0;32m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
-# Helper function
+# Helper function for prompts
 prompt_continue() {
   read -p $'\nPress ENTER to continue...' dummy
 }
@@ -17,10 +17,14 @@ prompt_continue() {
 checklist_menu() {
   local options_file="$1"
   local base_dir="$2"
+
+  [ -f "$options_file" ] || { echo -e "${YELLOW}Warning: $options_file not found. Skipping.${RESET}"; return; }
+
   local selected=()
   local index=1
 
   while IFS='|' read -r description script_name; do
+    [ -z "$description" ] && continue
     echo "$index) $description"
     options[$index]="$base_dir/$script_name"
     ((index++))
@@ -37,12 +41,12 @@ checklist_menu() {
       selected+=("${options[$choice]}")
       echo "Queued: ${options[$choice]}"
     else
-      echo "${YELLOW}Invalid choice. Try again.${RESET}"
+      echo -e "${YELLOW}Invalid choice. Try again.${RESET}"
     fi
   done
 
   for script in "${selected[@]}"; do
-    echo "Running: $script"
+    echo -e "Running: $script"
     bash "$script" "$INSTALL_CMD"
   done
 }
@@ -76,24 +80,24 @@ case "$OS_TYPE" in
     INSTALL_CMD="choco install -y"
     ;;
   *)
-    echo "${YELLOW}Unsupported or unknown OS detected. Some features may not work.${RESET}"
+    echo -e "${YELLOW}Unsupported or unknown OS detected. Some features may not work.${RESET}"
     ;;
 esac
 
 # === Part 1: Install Basics ===
-echo "${YELLOW}Installing basic applications...${RESET}"
+echo -e "${YELLOW}Installing basic applications...${RESET}"
 bash scripts/install_basic_apps.sh "$INSTALL_CMD"
 
 # === Part 2: Setup Dotfiles ===
-echo "${YELLOW}Setting up dotfiles...${RESET}"
+echo -e "${YELLOW}Setting up dotfiles...${RESET}"
 bash scripts/setup_dotfiles.sh
 
 # === Part 3: Optional Installations ===
-echo "${GREEN}Optional Installations Menu${RESET}"
+echo -e "${GREEN}Optional Installations Menu${RESET}"
 checklist_menu "optional/optional_options.conf" "optional"
 
 # === Part 4: System-Specific Installations ===
-echo "${GREEN}System-Specific Installations Menu${RESET}"
+echo -e "${GREEN}System-Specific Installations Menu${RESET}"
 case "$OS_TYPE" in
   linux|wsl)
     checklist_menu "system_specific/linux_options.conf" "system_specific"
@@ -105,9 +109,9 @@ case "$OS_TYPE" in
     checklist_menu "system_specific/windows_options.conf" "system_specific"
     ;;
   *)
-    echo "${YELLOW}No system-specific options available.${RESET}"
+    echo -e "${YELLOW}No system-specific options available.${RESET}"
     ;;
 esac
 
-echo "${GREEN}Bootstrap complete!${RESET}"
+echo -e "${GREEN}Bootstrap complete!${RESET}"
 
