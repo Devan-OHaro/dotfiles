@@ -1,157 +1,111 @@
-# Dotfiles Repository
+# System Setup Overview
 
-This repository contains my personal dotfiles for configuring development environments, managing tools, and customizing workflows. It includes a script to automate the installation of software and the setup of symbolic links for configuration files.
-
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Adding or Modifying Dotfiles](#adding-or-modifying-dotfiles)
-- [Repository Structure](#repository-structure)
-- [Contributing](#contributing)
+This repository sets up your full system environment, including dotfiles, packages, and optional tools. It works modularly across **Linux**, **WSL**, **macOS**, and **Git Bash (Windows)**.
 
 ---
 
-## Installation
+## 🔥 Quickstart
 
-1. **Clone the Repository:**
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Devan-OHaro/dotfiles.git ~/.dotfiles
+   git clone https://github.com/your-username/your-repo.git ~/.dotfiles
+   cd ~/.dotfiles
    ```
 
-2. **Install Dependencies:**
-   Ensure you have `jq` installed:
-   - **Ubuntu/Debian:**
-     ```bash
-     sudo apt install -y jq
-     ```
-   - **macOS:**
-     ```bash
-     brew install jq
-     ```
-
-3. **Run the Setup Script:**
+2. **Run the bootstrap:**
    ```bash
-   ~/.dotfiles/install.sh
+   bash bootstrap.sh
    ```
+
+3. **Follow the prompts** to install optional and system-specific tools.
 
 ---
 
-## Usage
+## 🛠 Bootstrap Flow (All OS)
 
-### Add New Dotfiles
-1. Place the file in the appropriate directory inside `~/.dotfiles/`.
-   - Example: `~/.dotfiles/nvim/init.vim` for Neovim.
-2. Update the `dotfiles.json` file with the new configuration:
-   ```json
-   "neovim": {
-     "install": true,
-     "dotfiles": [
-       { "source": "nvim/init.vim", "target": ".config/nvim/init.vim" }
-     ]
-   }
-   ```
+1. **Install Basic Applications**
+   - Installs essential packages (git, curl, wget, jq).
+   - Auto-detects your package manager (apt, pacman, brew, choco).
 
-3. Re-run the setup script to apply the changes:
-   ```bash
-   ~/.dotfiles/install.sh
-   ```
+2. **Set up Dotfiles**
+   - Links dotfiles from `dotfiles/` into `$HOME/`.
+   - Handles special cases (`special/` folder) based on `.target` files.
+   - Backs up real files (`.bak`), removes symlinks cleanly.
 
----
+3. **Optional Installations**
+   - Menu-driven install of optional tools (like Neovim, Chromium, Yomitan dictionaries).
 
-### Backup Existing Configurations
-If existing configuration files are found, they are renamed with a `.bak` suffix before creating symlinks.
+4. **System-Specific Installations**
+   - Extra setup depending on detected system:
+     - `system_specific/linux_options.conf`
+     - `system_specific/macos_options.conf`
+     - `system_specific/windows_options.conf`
 
 ---
 
-## Repository Structure
+## 🧠 Per OS Details
+
+### Linux (Ubuntu, Arch, etc.)
+- Install basics using `apt` or `pacman`.
+- Dotfiles linked under `$HOME`.
+- Neovim and plugins set up.
+- Fonts and Linux-specific tweaks available under `system_specific/`.
+
+### WSL (Windows Subsystem for Linux)
+- Treated like Linux.
+- Bootstrap fully supported.
+- Optional installs may skip GUI tools.
+
+### macOS
+- Install basics using `brew`.
+- Dotfiles linked.
+- macOS-specific options (Homebrew, GUI configs) available.
+
+### Git Bash (Windows)
+- Basic setup only.
+- Installs via `choco` if available.
+- Limited dotfile linking (no `$HOME/.config/` style configs).
+
+---
+
+## 📂 Directory Layout
 
 ```plaintext
-~/system-setup/
-├── bootstrap.sh            # (the script you have now)
-├── scripts/                 # Scripts that run automatically
+.dotfiles/
+├── bootstrap.sh
+├── dotfiles/
+│   ├── .vimrc
+│   ├── .gitconfig
+│   ├── special/
+│   │   ├── init.vim
+│   │   └── init.vim.target
+├── scripts/
 │   ├── install_basic_apps.sh
 │   ├── setup_dotfiles.sh
-├── optional/                # Optional installs (user selects from menu)
+├── optional/
 │   ├── optional_options.conf
 │   ├── install_neovim.sh
-│   ├── install_chromium.sh
-│   ├── install_yomitan_dictionaries.sh
-├── system_specific/         # System-specific installs
+├── system_specific/
 │   ├── linux_options.conf
 │   ├── macos_options.conf
 │   ├── windows_options.conf
-│   ├── install_linux_fonts.sh
-│   ├── install_macos_homebrew.sh
-│   ├── install_windows_terminal.sh
-├── dotfiles/                # Your actual dotfiles
-│   ├── .vimrc
-│   ├── .zshrc
-│   ├── .tmux.conf
-│   └── nvim/
-│       └── init.vim
-├── configs/                 # Misc GUI configs (if needed later)
-│   └── (empty for now)
-└── README.md                # (eventually explaining how everything works)
 ```
 
 ---
 
-## Contributing
-
-### Tasks and TODOs
-To manage tasks:
-1. Use the `tasks/` directory to store notes or work to be done.
-2. Organize tasks in individual markdown files:
-   - Example: `tasks/setup-tmux.md` to detail work for tmux configuration.
-
-### Git Workflow
-1. Create a branch for each task:
-   ```bash
-   git checkout -b feature/update-neovim-config
-   ```
-2. Commit your changes:
-   ```bash
-   git add .
-   git commit -m "Update Neovim configuration"
-   ```
-3. Push to GitHub:
-   ```bash
-   git push origin feature/update-neovim-config
-   ```
-4. Open a pull request for review.
+## 📜 Notes
+- You can **add more dotfiles** into `dotfiles/` anytime.
+- You can **add more optional tools** easily by editing `optional/optional_options.conf`.
+- System detection happens **automatically** — no manual setup needed.
 
 ---
 
-## Future Work
-- Add more detailed dotfiles for other tools.
-- Explore platform-specific customizations.
-- Automate additional setup steps like SSH keys, Git configurations, etc.
+## 🚀 Future Enhancements
+- Dry-run preview mode.
+- Auto-syncing dotfiles after manual changes.
+- Better Windows full support via WSL or native Powershell wrappers.
 
 ---
 
-## Tasks Directory Example
-
-### Create a `tasks/` Directory
-Organize work to be done into markdown files.
-
-#### Example:
-- `tasks/setup-tmux.md`: Detail plans to enhance tmux configurations.
-- `tasks/add-docker-config.md`: Outline plans for Docker-related configurations.
-- `tasks/improve-install-script.md`: Track enhancements to the installation script.
-
-### Git Workflow for Tasks
-1. Create a task branch:
-   ```bash
-   git checkout -b task/task-name
-   ```
-2. Add your task markdown files:
-   ```plaintext
-   ~/.dotfiles/tasks/setup-tmux.md
-   ```
-3. Commit and push:
-   ```bash
-   git add tasks/
-   git commit -m "Add setup-tmux task notes"
-   git push origin task/task-name
-   ```
+**Happy hacking! 🛠**
 
