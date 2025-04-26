@@ -13,6 +13,7 @@ BASIC_APPS=(
   git
   curl
   wget
+  vim
   jq
 )
 

@@ -14,7 +14,11 @@ mkdir -p "$HOME/.config"
 # Helper function to safely backup files
 backup_if_exists() {
   local path="$1"
-  if [ -f "$path" ]; then
+  
+  if [ -L "$path" ]; then
+    echo "Removing old symlink: $path"
+    rm "$path"
+  elif [ -f "$path" ]; then
     local backup_path="${path}.bak"
     local counter=1
     while [ -e "$backup_path" ] || [ -L "$backup_path" ]; do
@@ -23,9 +27,6 @@ backup_if_exists() {
     done
     echo "Backing up existing file: $path -> $backup_path"
     mv "$path" "$backup_path"
-  elif [ -L "$path" ]; then
-    echo "Removing old symlink: $path"
-    rm "$path"
   fi
 }
 

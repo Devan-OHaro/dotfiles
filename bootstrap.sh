@@ -94,7 +94,7 @@ bash scripts/setup_dotfiles.sh
 
 # === Part 3: Optional Installations ===
 echo -e "${GREEN}Optional Installations Menu${RESET}"
-checklist_menu "optional/optional_options.conf" "optional"
+checklist_menu "optional/options.conf" "optional"
 
 # === Part 4: System-Specific Installations ===
 echo -e "${GREEN}System-Specific Installations Menu${RESET}"
