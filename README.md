@@ -66,14 +66,32 @@ If existing configuration files are found, they are renamed with a `.bak` suffix
 ## Repository Structure
 
 ```plaintext
-~/.dotfiles/
-├── install.sh         # Main setup script
-├── dotfiles.json      # Configuration file defining dotfiles and package installs
-├── vimrc              # Example Vim configuration file
-├── nvim/              # Neovim configuration directory
-│   └── init.vim
-├── zshrc              # ZSH configuration file
-└── README.md          # Repository documentation
+~/system-setup/
+├── bootstrap.sh            # (the script you have now)
+├── scripts/                 # Scripts that run automatically
+│   ├── install_basic_apps.sh
+│   ├── setup_dotfiles.sh
+├── optional/                # Optional installs (user selects from menu)
+│   ├── optional_options.conf
+│   ├── install_neovim.sh
+│   ├── install_chromium.sh
+│   ├── install_yomitan_dictionaries.sh
+├── system_specific/         # System-specific installs
+│   ├── linux_options.conf
+│   ├── macos_options.conf
+│   ├── windows_options.conf
+│   ├── install_linux_fonts.sh
+│   ├── install_macos_homebrew.sh
+│   ├── install_windows_terminal.sh
+├── dotfiles/                # Your actual dotfiles
+│   ├── .vimrc
+│   ├── .zshrc
+│   ├── .tmux.conf
+│   └── nvim/
+│       └── init.vim
+├── configs/                 # Misc GUI configs (if needed later)
+│   └── (empty for now)
+└── README.md                # (eventually explaining how everything works)
 ```
 
 ---
