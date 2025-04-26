@@ -3,7 +3,7 @@
 # === Setup Dotfiles Script ===
 # Dynamically links dotfiles based on the contents of the dotfiles directory
 
-DOTFILES_DIR="$HOME/.dotfiles/dotfiles"
+DOTFILES_DIR="$HOME/dotfiles/dotfiles"
 SPECIAL_DIR="$DOTFILES_DIR/special"
 
 echo "Scanning dotfiles directory: $DOTFILES_DIR"
