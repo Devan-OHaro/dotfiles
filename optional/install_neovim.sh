@@ -1,47 +1,55 @@
 #!/bin/bash
 
-INSTALL_CMD="$1"
+set -e
 
-if [[ -z "$INSTALL_CMD" ]]; then
-  echo "Error: INSTALL_CMD not set. Exiting."
-  exit 1
-fi
-
-echo "Installing Neovim..."
-
-# Install Neovim if not installed
-if ! command -v nvim &> /dev/null; then
-  echo "Neovim not found. Installing..."
-  eval "$INSTALL_CMD neovim"
+# Detect package manager
+if command -v apt &>/dev/null; then
+    PM="apt"
+elif command -v pacman &>/dev/null; then
+    PM="pacman"
+elif command -v brew &>/dev/null; then
+    PM="brew"
 else
-  echo "Neovim already installed."
+    echo "Unsupported package manager. Exiting."
+    exit 1
 fi
 
-# Install vim-plug for Neovim if missing
-NVIM_AUTOLOAD_DIR="$HOME/.local/share/nvim/site/autoload"
-PLUG_VIM="$NVIM_AUTOLOAD_DIR/plug.vim"
+# Install Neovim depending on system
+if [ "$PM" == "apt" ]; then
+    echo "Downloading latest Neovim AppImage..."
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+    chmod u+x nvim.appimage
+    ./nvim.appimage --appimage-extract > /dev/null
+    sudo mv squashfs-root /opt/nvim
+    sudo ln -sf /opt/nvim/AppRun /usr/local/bin/nvim
+    rm nvim.appimage
 
-if [ ! -f "$PLUG_VIM" ]; then
-  echo "Installing vim-plug for Neovim..."
-  mkdir -p "$NVIM_AUTOLOAD_DIR"
-  curl -fLo "$PLUG_VIM" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-else
-  echo "vim-plug already installed for Neovim."
+elif [ "$PM" == "pacman" ]; then
+    sudo pacman -Sy --noconfirm neovim
+elif [ "$PM" == "brew" ]; then
+    brew install neovim
 fi
 
-# Create basic ~/.config/nvim if missing
-if [ ! -d "$HOME/.config/nvim" ]; then
-  echo "Creating default Neovim config directory..."
-  mkdir -p "$HOME/.config/nvim"
+# Set up configuration if not already in place
+mkdir -p ~/.config/nvim
+if [ ! -f ~/.config/nvim/init.vim ]; then
+    echo "set runtimepath^=~/.vim runtimepath+=~/.vim/after" > ~/.config/nvim/init.vim
+    echo "let &packpath = &runtimepath" >> ~/.config/nvim/init.vim
+    echo "source ~/.vimrc" >> ~/.config/nvim/init.vim
 fi
 
-# Auto-run PlugInstall if init.vim exists
-if [ -f "$HOME/.config/nvim/init.vim" ]; then
-  echo "Running :PlugInstall to install Neovim plugins..."
-  nvim --headless +PlugInstall +qa
-else
-  echo "No init.vim found. Skipping PlugInstall."
+# Optionally install vim-plug if using it
+if grep -q 'Plug' ~/.vimrc 2>/dev/null; then
+    echo "Installing vim-plug..."
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-echo "Neovim setup complete!"
+# Trigger plugin install if Plug is used
+if grep -q 'Plug' ~/.vimrc 2>/dev/null; then
+    echo "Launching Neovim to install plugins..."
+    nvim +PlugInstall +qall
+fi
+
+echo "Neovim installation complete."
 
