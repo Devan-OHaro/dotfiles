@@ -6,10 +6,23 @@ This repository sets up your full system environment, including dotfiles, packag
 
 ## 🔥 Quickstart
 
+### Windows (via WSL)
+1. **Download and run the PowerShell bootstrap script (no repo needed upfront):**
+   ```powershell
+   iwr -useb https://raw.githubusercontent.com/Devan-OHaro/dotfiles/main/bootstrap.ps1 | iex
+   ```
+
+2. **The script will:**
+   - Enable WSL and virtualization support.
+   - Prompt for distro selection and install WSL2.
+   - Launch WSL and auto-clone this repo inside the Linux home folder.
+   - Run the Linux bootstrap to complete the dotfile setup.
+
+### Linux/macOS
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/your-repo.git ~/.dotfiles
-   cd ~/.dotfiles
+   git clone https://github.com/Devan-OHaro/dotfiles.git ~/dotfiles
+   cd ~/dotfiles
    ```
 
 2. **Run the bootstrap:**
@@ -52,9 +65,11 @@ This repository sets up your full system environment, including dotfiles, packag
 - Fonts and Linux-specific tweaks available under `system_specific/`.
 
 ### WSL (Windows Subsystem for Linux)
-- Treated like Linux.
-- Bootstrap fully supported.
-- Optional installs may skip GUI tools.
+- Run the hosted PowerShell bootstrap script.
+- Enables WSL + Virtual Machine Platform.
+- Prompts for and installs a Linux distro.
+- Clones this repo *inside* the Linux environment.
+- Runs `bootstrap.sh` within WSL to set up everything.
 
 ### macOS
 - Install basics using `brew`.
@@ -62,17 +77,17 @@ This repository sets up your full system environment, including dotfiles, packag
 - macOS-specific options (Homebrew, GUI configs) available.
 
 ### Git Bash (Windows)
-- Basic setup only.
-- Installs via `choco` if available.
-- Limited dotfile linking (no `$HOME/.config/` style configs).
+- Not supported due to missing standard Unix tools.
+- Use WSL instead.
 
 ---
 
 ## 📂 Directory Layout
 
 ```plaintext
-.dotfiles/
-├── bootstrap.sh
+dotfiles/
+├── bootstrap.sh            # Main Linux/macOS/WSL bootstrap
+├── bootstrap.ps1           # Windows-side PowerShell bootstrap (installs WSL + repo)
 ├── dotfiles/
 │   ├── .vimrc
 │   ├── .gitconfig
@@ -97,15 +112,10 @@ This repository sets up your full system environment, including dotfiles, packag
 - You can **add more dotfiles** into `dotfiles/` anytime.
 - You can **add more optional tools** easily by editing `optional/optional_options.conf`.
 - System detection happens **automatically** — no manual setup needed.
+- Windows users should always go through WSL (not Git Bash).
 
 ---
 
 ## 🚀 Future Enhancements
 - Dry-run preview mode.
-- Auto-syncing dotfiles after manual changes.
-- Better Windows full support via WSL or native Powershell wrappers.
-
----
-
-**Happy hacking! 🛠**
-
+- Auto-syncing dotfiles after manual changes
