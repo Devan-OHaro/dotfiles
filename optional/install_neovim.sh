@@ -9,6 +9,8 @@ elif command -v pacman &>/dev/null; then
     PM="pacman"
 elif command -v brew &>/dev/null; then
     PM="brew"
+elif command -v snap &>/dev/null; then
+    PM="snap"
 else
     echo "Unsupported package manager. Exiting."
     exit 1
@@ -16,18 +18,14 @@ fi
 
 # Install Neovim depending on system
 if [ "$PM" == "apt" ]; then
-    echo "Downloading latest Neovim AppImage..."
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    chmod u+x nvim.appimage
-    ./nvim.appimage --appimage-extract > /dev/null
-    sudo mv squashfs-root /opt/nvim
-    sudo ln -sf /opt/nvim/AppRun /usr/local/bin/nvim
-    rm nvim.appimage
-
+    echo "Neovim not available via apt. Trying snap instead."
+    sudo snap install nvim --classic
 elif [ "$PM" == "pacman" ]; then
     sudo pacman -Sy --noconfirm neovim
 elif [ "$PM" == "brew" ]; then
     brew install neovim
+elif [ "$PM" == "snap" ]; then
+    sudo snap install nvim --classic
 fi
 
 # Set up configuration if not already in place
