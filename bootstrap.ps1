@@ -72,7 +72,7 @@ if ($distro -ne "") {
 # --- 5. Clone repo and run bootstrap.sh inside WSL ---
 
 $repoURL = "https://github.com/Devan-OHaro/dotfiles.git"
-$runIfMissingCommand = "if [ ! -d `"~/dotfiles`" ]; then git clone $repoURL ~/dotfiles; fi && cd ~/dotfiles && bash bootstrap.sh"
+$runIfMissingCommand = \"if [ ! -d `\"~/dotfiles`\" ]; then git clone $repoURL ~/dotfiles; fi && cd ~/dotfiles && bash bootstrap.sh\"
 
 Write-Host "`nLaunching WSL to continue setup and run bootstrap.sh..." -ForegroundColor Cyan
 Write-Host "Executing in WSL: $runIfMissingCommand" -ForegroundColor DarkGray
