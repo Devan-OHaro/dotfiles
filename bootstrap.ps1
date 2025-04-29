@@ -19,7 +19,7 @@ foreach ($feature in $features) {
 }
 
 if ($restartNeeded) {
-    Write-Host "\nYou must restart your computer before continuing WSL setup." -ForegroundColor Red
+    Write-Host "`nYou must restart your computer before continuing WSL setup." -ForegroundColor Red
     pause
     exit
 }
@@ -38,12 +38,12 @@ try {
 
 # --- 3. Check if WSL user and dotfiles directory already exist ---
 
-Write-Host "\nChecking for existing dotfiles setup inside WSL..." -ForegroundColor Cyan
-$userCheckCommand = "if [ -d \"/home/$USER/dotfiles\" ]; then exit 0; else exit 1; fi"
+Write-Host "`nChecking for existing dotfiles setup inside WSL..." -ForegroundColor Cyan
+$userCheckCommand = "if [ -d `"/home/$USER/dotfiles`" ]; then exit 0; else exit 1; fi"
 wsl -e bash -c "$userCheckCommand"
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "\nExisting dotfiles found. Pulling latest and running bootstrap..." -ForegroundColor Cyan
+    Write-Host "`nExisting dotfiles found. Pulling latest and running bootstrap..." -ForegroundColor Cyan
     $runCommand = "cd ~/dotfiles && git pull && bash bootstrap.sh"
     Write-Host "Executing in WSL: $runCommand" -ForegroundColor DarkGray
     wsl -e bash -c "$runCommand"
@@ -52,15 +52,15 @@ if ($LASTEXITCODE -eq 0) {
 }
 
 # --- 4. Prompt for distro selection and install ---
-Write-Host "\nAvailable Distros:" -ForegroundColor Green
+Write-Host "`nAvailable Distros:" -ForegroundColor Green
 wsl --list --online
 
-$distro = Read-Host "\nEnter the distro name to install (e.g. Ubuntu)"
+$distro = Read-Host "`nEnter the distro name to install (e.g. Ubuntu)"
 
 if ($distro -ne "") {
     Write-Host "Installing $distro..." -ForegroundColor Yellow
     wsl --install -d $distro
-    Write-Host "\nOnce installation completes, set up your Linux user and password." -ForegroundColor Green
+    Write-Host "`nOnce installation completes, set up your Linux user and password." -ForegroundColor Green
     pause
 }
 
@@ -69,7 +69,7 @@ if ($distro -ne "") {
 $repoURL = "https://github.com/Devan-OHaro/dotfiles.git"
 $cloneCommand = "cd ~ && git clone $repoURL && cd dotfiles && bash bootstrap.sh"
 
-Write-Host "\nLaunching WSL to continue setup and run bootstrap.sh..." -ForegroundColor Cyan
+Write-Host "`nLaunching WSL to continue setup and run bootstrap.sh..." -ForegroundColor Cyan
 Write-Host "Executing in WSL: $cloneCommand" -ForegroundColor DarkGray
 wsl -e bash -c "$cloneCommand"
 pause
