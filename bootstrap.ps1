@@ -12,7 +12,7 @@ $features = @(
 foreach ($feature in $features) {
     $status = Get-WindowsOptionalFeature -Online -FeatureName $feature.Name
     if ($status.State -ne "Enabled") {
-        Write-Host "Enabling ${feature.Label}..." -ForegroundColor Yellow
+        Write-Host "Enabling ${($feature.Label)}..." -ForegroundColor Yellow
         dism.exe /online /enable-feature /featurename:$($feature.Name) /all /norestart
         $restartNeeded = $true
     }
@@ -36,7 +36,18 @@ try {
     exit 1
 }
 
-# --- 3. Prompt for distro selection and install ---
+# --- 3. Check if WSL user and dotfiles directory already exist ---
+
+$userCheckCommand = "test -d ~ && test -d ~/dotfiles"
+$exists = wsl bash -c "$userCheckCommand" 2>$null
+
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "\nExisting WSL user and dotfiles detected. Running bootstrap.sh..." -ForegroundColor Cyan
+    wsl bash -c "cd ~/dotfiles && git pull && bash bootstrap.sh"
+    exit
+}
+
+# --- 4. Prompt for distro selection and install ---
 Write-Host "\nAvailable Distros:" -ForegroundColor Green
 wsl --list --online
 
@@ -49,7 +60,7 @@ if ($distro -ne "") {
     pause
 }
 
-# --- 4. Clone repo and run bootstrap.sh inside WSL ---
+# --- 5. Clone repo and run bootstrap.sh inside WSL ---
 
 $repoURL = "https://github.com/Devan-OHaro/dotfiles.git"
 $cloneCommand = "cd ~ && git clone $repoURL && cd dotfiles && bash bootstrap.sh"
