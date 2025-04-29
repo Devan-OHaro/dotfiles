@@ -12,7 +12,7 @@ $features = @(
 foreach ($feature in $features) {
     $status = Get-WindowsOptionalFeature -Online -FeatureName $feature.Name
     if ($status.State -ne "Enabled") {
-        Write-Host "Enabling ${($feature.Label)}..." -ForegroundColor Yellow
+        Write-Host "Enabling $($feature.Label)..." -ForegroundColor Yellow
         dism.exe /online /enable-feature /featurename:$($feature.Name) /all /norestart
         $restartNeeded = $true
     }
@@ -39,10 +39,10 @@ try {
 # --- 3. Check if WSL user and dotfiles directory already exist ---
 
 Write-Host "`nChecking for existing dotfiles setup inside WSL..." -ForegroundColor Cyan
-$userCheckCommand = "if [ -d `"/home/$USER/dotfiles`" ]; then exit 0; else exit 1; fi"
-wsl -e bash -c "$userCheckCommand"
+$userCheckCommand = "[ -d `$HOME/dotfiles ] && echo exists"
+$dotfilesExists = wsl -e bash -c "$userCheckCommand"
 
-if ($LASTEXITCODE -eq 0) {
+if ($dotfilesExists -match "exists") {
     Write-Host "`nExisting dotfiles found. Pulling latest and running bootstrap..." -ForegroundColor Cyan
     $runCommand = "cd ~/dotfiles && git pull && bash bootstrap.sh"
     Write-Host "Executing in WSL: $runCommand" -ForegroundColor DarkGray
@@ -67,10 +67,10 @@ if ($distro -ne "") {
 # --- 5. Clone repo and run bootstrap.sh inside WSL ---
 
 $repoURL = "https://github.com/Devan-OHaro/dotfiles.git"
-$cloneCommand = "cd ~ && git clone $repoURL && cd dotfiles && bash bootstrap.sh"
+$runIfMissingCommand = "if [ ! -d `"~/dotfiles`" ]; then git clone $repoURL ~/dotfiles; fi && cd ~/dotfiles && bash bootstrap.sh"
 
 Write-Host "`nLaunching WSL to continue setup and run bootstrap.sh..." -ForegroundColor Cyan
-Write-Host "Executing in WSL: $cloneCommand" -ForegroundColor DarkGray
-wsl -e bash -c "$cloneCommand"
+Write-Host "Executing in WSL: $runIfMissingCommand" -ForegroundColor DarkGray
+wsl -e bash -c "$runIfMissingCommand"
 pause
 
