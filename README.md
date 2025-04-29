@@ -9,7 +9,7 @@ This repository sets up your full system environment, including dotfiles, packag
 ### Windows (via WSL)
 1. **Download and run the PowerShell bootstrap script (no repo needed upfront):**
    ```powershell
- iwr -useb https://raw.githubusercontent.com/Devan-OHaro/dotfiles/MultiOS/bootstrap.ps1 | iex
+        iwr -useb https://raw.githubusercontent.com/Devan-OHaro/dotfiles/main/bootstrap.ps1 | iex
    ```
 
 2. **The script will:**
