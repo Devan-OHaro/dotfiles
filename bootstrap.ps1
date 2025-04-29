@@ -38,12 +38,12 @@ try {
 
 # --- 3. Check if WSL user and dotfiles directory already exist ---
 
-$userCheckCommand = "test -d ~ && test -d ~/dotfiles"
+$userCheckCommand = "[ -d \"/home/$(whoami)/dotfiles\" ]"
 $exists = wsl bash -c "$userCheckCommand" 2>$null
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "\nExisting WSL user and dotfiles detected. Running bootstrap.sh..." -ForegroundColor Cyan
-    wsl bash -c "cd ~/dotfiles && git pull && bash bootstrap.sh"
+    wsl -u $(wsl -e sh -c 'echo $USER') bash -c "cd ~/dotfiles && git pull && bash bootstrap.sh"
     exit
 }
 
