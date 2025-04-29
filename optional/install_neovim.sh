@@ -37,10 +37,31 @@ if [ ! -f ~/.config/nvim/init.vim ]; then
 fi
 
 # Optionally install vim-plug if using it
-if grep -q 'Plug' ~/.vimrc 2>/dev/null; then
-    echo "Installing vim-plug..."
+# Ensure vim-plug is installed for Neovim
+if [ ! -f ~/.local/share/nvim/site/autoload/plug.vim ]; then
+    echo "Installing vim-plug for Neovim..."
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+# Also ensure vim-plug for Vim
+if [ ! -f ~/.vim/autoload/plug.vim ]; then
+    echo "Installing vim-plug for Vim..."
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+# Trigger plugin install if Plug is used
+if grep -q 'Plug' ~/.vimrc 2>/dev/null; then
+    if command -v nvim &>/dev/null; then
+        echo "Launching Neovim to install plugins..."
+        nvim +PlugInstall +qall
+    elif command -v vim &>/dev/null; then
+        echo "Launching Vim to install plugins..."
+        vim +PlugInstall +qall
+    else
+        echo "Neither Neovim nor Vim found! Cannot install plugins."
+    fi
 fi
 
 # Trigger plugin install if Plug is used

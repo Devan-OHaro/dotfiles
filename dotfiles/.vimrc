@@ -2,6 +2,8 @@ set nocompatible
 filetype plugin on
 syntax on
 
+let mapleader = " "
+
 " Vimwiki configuration
  let g:vimwiki_list = [{
    \ 'path': '~/Devan-Wiki/vimwiki',

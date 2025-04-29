@@ -1,3 +1,5 @@
+let mapleader = " "
+
 call plug#begin()
 
 Plug 'vimwiki/vimwiki'
@@ -5,8 +7,6 @@ Plug 'vimwiki/vimwiki'
 Plug 'easymotion/vim-easymotion'
 
 call plug#end()
-
-let mapleader = " "
 
 colorscheme murphy
 
