@@ -38,12 +38,17 @@ try {
 
 # --- 3. Check if WSL user and dotfiles directory already exist ---
 
-$userCheckCommand = "[ -d \"/home/$(whoami)/dotfiles\" ]"
-$exists = wsl bash -c "$userCheckCommand" 2>$null
+Write-Host "\nChecking for existing dotfiles setup inside WSL..." -ForegroundColor Cyan
+$userCheckCommand = "[ -d \"/home/\$(whoami)/dotfiles\" ]"
+wsl bash -c "$userCheckCommand"
 
 if ($LASTEXITCODE -eq 0) {
-    Write-Host "\nExisting WSL user and dotfiles detected. Running bootstrap.sh..." -ForegroundColor Cyan
-    wsl -u $(wsl -e sh -c 'echo $USER') bash -c "cd ~/dotfiles && git pull && bash bootstrap.sh"
+    Write-Host "\nExisting dotfiles found. Pulling latest and running bootstrap..." -ForegroundColor Cyan
+    $userName = wsl -e sh -c "echo \$USER"
+    Write-Host "Running as user: $userName"
+    $runCommand = "cd ~/dotfiles && git pull && bash bootstrap.sh"
+    wsl -u $userName -e bash -c "$runCommand"
+    pause
     exit
 }
 
@@ -65,6 +70,7 @@ if ($distro -ne "") {
 $repoURL = "https://github.com/Devan-OHaro/dotfiles.git"
 $cloneCommand = "cd ~ && git clone $repoURL && cd dotfiles && bash bootstrap.sh"
 
-Write-Host "\nLaunching WSL to continue setup..." -ForegroundColor Cyan
-wsl bash -c "$cloneCommand"
+Write-Host "\nLaunching WSL to continue setup and run bootstrap.sh..." -ForegroundColor Cyan
+wsl -e bash -c "$cloneCommand"
+pause
 
