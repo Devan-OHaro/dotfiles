@@ -39,7 +39,7 @@ try {
 # --- 3. Check if WSL user and dotfiles directory already exist ---
 
 Write-Host "`nChecking for existing dotfiles setup inside WSL..." -ForegroundColor Cyan
-$userCheckCommand = "[ -d `$HOME/dotfiles ] && echo exists"
+$userCheckCommand = "if [ -d ~/dotfiles ]; then echo exists; fi"
 $dotfilesExists = wsl -e bash -c "$userCheckCommand"
 
 if ($dotfilesExists -match "exists") {
@@ -58,10 +58,15 @@ wsl --list --online
 $distro = Read-Host "`nEnter the distro name to install (e.g. Ubuntu)"
 
 if ($distro -ne "") {
-    Write-Host "Installing $distro..." -ForegroundColor Yellow
-    wsl --install -d $distro
-    Write-Host "`nOnce installation completes, set up your Linux user and password." -ForegroundColor Green
-    pause
+    $existingDistros = wsl --list --quiet
+    if ($existingDistros -match "^$distro$") {
+        Write-Host "`nDistro '$distro' is already installed. Skipping installation." -ForegroundColor Yellow
+    } else {
+        Write-Host "Installing $distro..." -ForegroundColor Yellow
+        wsl --install -d $distro
+        Write-Host "`nOnce installation completes, set up your Linux user and password." -ForegroundColor Green
+        pause
+    }
 }
 
 # --- 5. Clone repo and run bootstrap.sh inside WSL ---
