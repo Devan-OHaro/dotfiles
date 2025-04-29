@@ -44,7 +44,7 @@ $dotfilesExists = wsl -e bash -c "$userCheckCommand"
 
 if ($dotfilesExists -match "exists") {
     Write-Host "`nExisting dotfiles found. Pulling latest and running bootstrap..." -ForegroundColor Cyan
-    $runCommand = "cd ~/dotfiles && git pull && bash bootstrap.sh"
+    $runCommand = "cd ~/dotfiles && git branch --set-upstream-to=origin/MultiOS MultiOS && git pull && bash bootstrap.sh"
     Write-Host "Executing in WSL: $runCommand" -ForegroundColor DarkGray
     wsl -e bash -c "$runCommand"
     pause
@@ -72,7 +72,7 @@ if ($distro -ne "") {
 # --- 5. Clone repo and run bootstrap.sh inside WSL ---
 
 $repoURL = "https://github.com/Devan-OHaro/dotfiles.git"
-$runIfMissingCommand = "if [ ! -d `"~/dotfiles`" ]; then git clone $repoURL ~/dotfiles; fi && cd ~/dotfiles && bash bootstrap.sh"
+$runIfMissingCommand = "if [ ! -d \"~/dotfiles\" ]; then git clone $repoURL ~/dotfiles; fi && cd ~/dotfiles && bash bootstrap.sh"
 
 Write-Host "`nLaunching WSL to continue setup and run bootstrap.sh..." -ForegroundColor Cyan
 Write-Host "Executing in WSL: $runIfMissingCommand" -ForegroundColor DarkGray
